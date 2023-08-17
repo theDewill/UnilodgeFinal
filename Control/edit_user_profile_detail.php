@@ -22,17 +22,18 @@
     // [to do] add ui to update success!!
     
 
+
+
 //get the user inputs
 $nam = $_POST['name'];
 $use_name = $_POST['user_name'];
-$pass = $_POST['psw'];
-$c_pass = $_POST['psw-repeat'];
+$Opasswd = $_POST['password1'];
+$c_pass =$_POST['password2'];
 $nic = $_POST['nic'];
 $email = $_POST['email'];
 $con_num = $_POST['pn'];
 
 include '../header/session.php';
-
 
 //declearing the variable to assing the data from the database
 $db_email="";
@@ -59,39 +60,40 @@ while ($row=mysqli_fetch_array($result)) {
 $sql_dup = "SELECT * FROM user WHERE id!=$uid ";
 $result_dup=mysqli_query($connection,$sql_dup);
 
+//--update signals---
+$dup_cnt = 0;
+
+//looping through all the ohter user data to find wether we have similar mail or username availble
 while ($row=mysqli_fetch_array($result_dup)) {
 	$db_dup_email=$row['email'];
-    $db_dup_use_name = $row['username'];}
+    $db_dup_use_name = $row['username'];
     
     if($use_name == $db_dup_use_name){
+        $dup_cnt++;
         echo '<div class="responsive-div">
             <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
             <div class="alert alert-danger" role="alert">
-                <h3>This username is alredy exits !!</h3>
+                <h3>This username alredy exists !!</h3>
                 ';
-    }elseif($email==$db_dup_email){
+    }else if($email==$db_dup_email){
+        $dup_cnt++;
         echo '<div class="responsive-div">
         <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
         <div class="alert alert-danger" role="alert">
-            <h3>This email is alredy exits !!</h3>
+            <h3>This Email is alredy exists !!</h3>
             ';
     }else{
+        continue;
+    }
+}
 
         //if there are no any duplicates further execution proceeds from here
         // echo "success" ; 
         //checking weather the password and the comfirmed password is same 
-        if($pass == $c_pass){
-            // check for the empty input datas
-           if ($nam=="" || $use_name=="" || $email=="" || $nic=="" ||$pass=="") {
-               echo '<div class="responsive-div">
-               <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-               <div class="alert alert-danger" role="alert">
-                   <h3>Please Enter the Detail in Required Fields!!</h3>
-                   </div>
-           </div>';
-           
-           } else {
-                //updating the image names based on the given new data
+    if($dup_cnt==0 && $Opasswd==$c_pass){
+            
+        //UPDATE PROCESS STARTS---->
+        //updating the image names based on the given new data
                 //---profile Image Area ----
 
                $file_path = '../uploads/';
@@ -100,42 +102,46 @@ while ($row=mysqli_fetch_array($result_dup)) {
                //if rename the folder then update the data at the database.
                if (rename($old_folder_name,$rename)) {
 
-                
                    // data update quary
-                   $sql="UPDATE user SET uname='$nam',email='$email',nic='$nic',username='$use_name',passwd='$pass'  WHERE id=$uid";
+                   $sql="UPDATE user SET uname='$nam',email='$email',nic='$nic',username='$use_name',passwd='$Opasswd'  WHERE id=$uid";
                    
                    // if the detail updating process is fail display the error 
                    if (!mysqli_query($connection,$sql)) {
                        die(mysqli_error($con));
+                       //redirecting to login.html
                        header('location:../login.html');
                     }
                    
                     else {
-                        echo "UPDATE SUCCESS!!!!";
-
+                        //redirecting to dahsboard.php
+                        header('location:../dashboard.php');
                     }
        
-           }else{
+           }
+           //if the folder process not moved as expected comes to this
+           else
+           {
        
            echo'<div class="responsive-div">
            <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
            <div class="alert alert-warning" role="alert">
-           <h3>Cannot Update Profile Folders, Tru Another time</h3>
+           <h3>Cannot Update Profile Folders, Try Another time...</h3>
            </div>
        </div>';
        
        }
-    }
+  //if the passwords didnt match it will come to this  
 }else{
+
     echo'<div class="responsive-div">
            <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
            <div class="alert alert-warning" role="alert">
-           <h3>Passwords are not matched !!!</h3>
+           <h3>Passwords Mismatch !!!</h3>
            </div>
        </div>';
 }
 
-}
+
 
 
 

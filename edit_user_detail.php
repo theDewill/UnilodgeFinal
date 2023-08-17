@@ -52,6 +52,7 @@ while ($row=mysqli_fetch_array($result)) {
     
 }
 
+
 ?>
 <link rel="stylesheet" type="text/css" href="./style/edit_user.css">
 <body bgcolor="845931">
@@ -78,10 +79,11 @@ while ($row=mysqli_fetch_array($result)) {
     <input type="text"  name="pn"  required placeholder="Enter the Contact number"  value="<?php echo $db_con_number ;?>">
 
     <label><b>Password</b></label>
-    <input type="password" name="psw" id="psw" required placeholder="Password"  value="<?php echo $db_pass ;?>">
+    <input type="password" name="password1" id="psw"  placeholder="Password" required>
 
     <label><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required  value="<?php echo $db_pass ;?>">
+    <input type="password" placeholder="Repeat Password" name="password2" id="psw-repeat" required>
+
     <hr>
     <center>
         <button type="submit" class="registerbtn">

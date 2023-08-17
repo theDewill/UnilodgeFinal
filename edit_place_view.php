@@ -9,13 +9,13 @@
     <!--<script src="https://cdn.tailwindcss.com"></script>!-->
     <link rel="stylesheet" href="./style/dashboard.css">
 </head>
-<body >
+<body style="display:flex;justify-content:center;">
 
 
 <?php
 
     $board_id = $_GET["pid"];
-    echo $board_id;
+    //echo $board_id;
     include './db_connection/data_connection.php';
 
     $sql="SELECT * FROM places WHERE id=$board_id";
@@ -24,7 +24,7 @@
 
 
 ?>
-<div class="About" >
+<div class="About" style="max-width:800px;margin-top:20px;">
             <div class="title" style="font-weight:700;color:brown;"> Update the Boarding Place Details..</div>
             <div class="content">
 

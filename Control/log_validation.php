@@ -44,50 +44,34 @@ $user_id ="";
 $result= mysqli_query($connection,$sql);
 
 //checking weather the user inputs are null 
-if($email == "" || $pass_w == ""){
-    echo '<div class="responsive-div">
-                <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-                <div class="alert alert-warning" role="alert">
-                <h3>Enter the Login Detail</h3>
-                </div>
-            </div>'; 
-}else{
-    //rectrive the data form the datbase
-    while($row = mysqli_fetch_array($result)){
+
+///-----handling begins-------
+    //rectrive the data form the datbase   
+$row = mysqli_fetch_array($result);
+
+if(isset($row)){
         $db_email = $row['email'];
         $db_passowrd = $row['passwd'];
         $user_id = $row['id'];
-
-        //if the user inpute eqaul to user input  check weather user input equal to the DB password 
-        if($db_email == $email){
-
-            if ($db_passowrd == $pass_w) {
-                // if the both user name and apssword that enterd by the user equal to the DB data then regrate to the dashboard
-                $_SESSION['iduser'] = $user_id; // --- storing the id value in server session storage to use it between mutiple invokations
-                header("location:../dashboard.php"); // use to direct the user to the dashboard via GET Request Header
-
-            }else{
-                // if the password is worng 
-                echo '<div class="responsive-div">
-                <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-                <div class="alert alert-warning" role="alert">
-                <h3>Enter the correct Password</h3>
-                </div>
-            </div>'; 
-            break;
-            }
-        }else{
-            echo '<div class="responsive-div">
-                <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-                <div class="alert alert-warning" role="alert">
-                <h3>Enter the correct Email</h3>
-                </div>
-            </div>'; 
-            break;
-        }
-    }
 }
 
+//checking wether theres a email as entered one and if there is, is the password correct
+if(isset($db_email) && $pass_w==$db_passowrd){
+            
+        // if the both user name and apssword that enterd by the user equal to the DB data then regrate to the dashboard
+        $_SESSION['iduser'] = $user_id; // --- storing the id value in server session storage to use it between mutiple invokations
+        header("location:../dashboard.php"); // use to direct the user to the dashboard via GET Request Header
+
+}else{    
+        echo '<div class="responsive-div">
+                <img src="../images/warning_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
+                <div class="alert alert-warning" role="alert">
+                <h3>Email or Password is Incorrect!!!</h3>
+                </div>
+            </div>'; 
+            
+}
+    
 ?>
     
 </body>

@@ -31,6 +31,7 @@ $nic = $_POST['nic'];
 $email = $_POST['email'];
 $contact = $_POST['pn_num'];
 
+//inserting the fetched data similar to supplied data if available
 include "./serch_exit_user_data.php";
 
 //confirming that the password and the confirm password filed entries matches
@@ -40,19 +41,7 @@ include "./serch_exit_user_data.php";
     //if these 2 are empty that means new record is applicable
     if($db_use_name=="" && $db_email ==""){
 
-        $insert_query = "INSERT INTO user(uname,email,nic,username,passwd,contact) VALUES ('$nam','$email','$nic','$use_name','$c_pass','$contact')";
-
-        if (!mysqli_query($connection,$insert_query)){	
-            //if theres an error in query this part goes else, jumps to "else"												
-            $error = die(mysql_errno($connection));
-            echo '<div class="responsive-div">
-            <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-            <div class="alert alert-danger" role="alert">
-                <h3>'.$error.'</h3>
-                ';
-        }else{
-
-            //proceed to data insertion
+            //proceed to folder creation 
             $folder_name = $use_name."_".$email."_"."img";
             $test_folder = mkdir("../uploads/$folder_name");
 
@@ -64,36 +53,43 @@ include "./serch_exit_user_data.php";
                 </div>
             </div>';
             }else{
+                //that means folder is created with returning 1 and proceeding to insert data
+            $insert_query = "INSERT INTO user(uname,email,nic,username,passwd,contact) VALUES ('$nam','$email','$nic','$use_name','$c_pass','$contact')";
 
+            if (!mysqli_query($connection,$insert_query)){	
+            //if theres an error in query this part goes else, jumps to "else"												
+            $error = die(mysql_errno($connection));
+            echo '<div class="responsive-div">
+            <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
+            <div class="alert alert-danger" role="alert">
+                <h3>'.$error.'</h3>
+                ';
+            }else{
+                
                 header("location:../login.html");
-            }
+                
         }
+        }
+        
     }else {
+        //comes to this if there are already availble usernames or emails
 
         if($db_email == $email){
             echo '<div class="responsive-div">
         <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
         <div class="alert alert-danger" role="alert">
-            <h3>This email is alredy exits !!</h3>
+            <h3>This email alredy exists !!</h3>
             ';
         }elseif( $db_use_name == $use_name){
             echo '<div class="responsive-div">
             <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
             <div class="alert alert-danger" role="alert">
-                <h3>This username is alredy exits !!</h3>
+                <h3>This username alredy exists !!</h3>
                 ';
         }
 }
 
-// } else{
 
-//     echo '<div class="responsive-div">
-//     <img src="../images/error_msg_img.png" alt="Oh snap! Sorry! There was a problem with your request.">
-//     <div class="alert alert-danger" role="alert">
-//         <h3>Passwords are not matched !!!</h3>
-//         ';
-
-// }
 
 ?>
 </body>

@@ -56,15 +56,21 @@ foreach($input_field_keys as $key){
             //image name push (update)
 
             if($cnt < count($old_file_ids)){
+
                 $img_name_update_qry = "UPDATE images SET path ='$file_name' WHERE id=$old_file_ids[$cnt];";
                 $img_name_push_result = mysqli_query($connection, $img_name_update_qry);
+
             }else{
+
                 $insert_new_img = "INSERT INTO images (pid,path) VALUES ($place,'$file_name');";
                 $result_insertion = mysqli_query($connection, $insert_new_img);
+
             }
             $cnt++;
+
             if($img_name_push_result || $result_insertion){
                 $cnt_image_name_pushes++;
+                
             } 
 }
 
